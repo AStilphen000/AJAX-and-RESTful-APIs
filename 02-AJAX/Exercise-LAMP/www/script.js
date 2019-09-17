@@ -1,8 +1,8 @@
 /*  Exercise 01_11_01
 
     Whole Spectrum Energy Solutions
-    Author: 
-    Date:   
+    Author: Angelina Stilphen
+    Date:   9.16.19
 
     Filename: script.js
 */
@@ -12,6 +12,29 @@
 // global variables
 var selectedCity = "Tucson, AZ";
 var weatherReport;
+var httpRequest = false;
+
+function getRequestObject() {
+   alert("getRequestObject()");
+}
+
+if (!httpRequest) {
+   httpRequest = getRequestObject();
+}
+
+try {
+   httpRequest = new XMLHttpRequest();
+}
+catch (requestError) {
+   document.querySelector("p.error").innerHTML = "Forecast not supported by your browser.";
+    document.querySelector("p.error").style.display = "block";
+   return false;
+}
+return httpRequest;
+
+httpRequest.abort();
+httpRequest.open("get", "solar.php?" + "lat=" + latitude +  "&lng=" + longitude, true );
+httpRequest.send(null);
 
 function getWeather(evt) {
    var latitude;
@@ -33,6 +56,11 @@ function getWeather(evt) {
       latitude = 45.5601062;
       longitude = -73.7120832;
    }
+} 
+
+function fillWeather() {
+   if(httpRequest.readyState === 4 && httpRequest.status === 200)
+   weatherReport = JSON.parse(httpRequest.responseText);
 }
 
 var locations = document.querySelectorAll("section ul li");
